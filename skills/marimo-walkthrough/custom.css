@@ -1,0 +1,64 @@
+<style>
+/* ── Fonts ──────────────────────────────────────────────────────────────── */
+/* Fira Code: https://github.com/tonsky/FiraCode */
+@import url('https://cdn.staticdelivr.com/gfonts/css2?family=Fira+Code:wght@300..700&display=swap');
+
+:root {
+  --background: #ffffff;
+  --foreground: #45372b;   /* warm dark brown */
+  --accent:     #df7020;   /* burnt orange — links, highlights */
+  --marimo-text-font:      "Fira Code", "JetBrains Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
+  --marimo-heading-font:   "Fira Code", "JetBrains Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
+  --marimo-monospace-font: "Fira Code", "JetBrains Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Body text at 20px — readable at presentation scale */
+marimo-editor, .cell-output, .markdown-body, .prose,
+p, li, td, th, span, div:not([class*="icon"]) {
+  font-size: 20px !important;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* ── Headings ───────────────────────────────────────────────────────────── */
+/* Scaled relative to body so they don't overpower data */
+h1 { font-size: 1.5em  !important; }
+h2 { font-size: 1.3em  !important; }
+h3 { font-size: 1.15em !important; }
+
+/* ── Tables ─────────────────────────────────────────────────────────────── */
+table {
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+th, td {
+  border: 1px solid #d0c8c0;
+  padding: 6px 12px;
+  text-align: left;
+}
+th {
+  background-color: #f5f0eb;
+  font-weight: 600;
+}
+
+/* ── Callout / admonition boxes (marimo /// note syntax) ─────────────────── */
+.admonition, .note, [class*="admonition"] {
+  border-left: 4px solid var(--accent);
+  background: #fdf6ef;
+  padding: 0.75em 1em;
+  margin: 1em 0;
+  border-radius: 0 4px 4px 0;
+}
+</style>
