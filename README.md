@@ -1,40 +1,19 @@
 # Marimo Walkthrough Skill
 
-[Marimo](https://marimo.io/) is a Python notebook where cells are reactive — edit one cell and every downstream cell updates automatically. I use it for all my research notebooks.
+[Marimo](https://marimo.io/) is a Python notebook alternative to Jupyter. While I've been using Jupyter time to time, two things push me to use marimo notebook: 
 
-## Why marimo
-
-Three things keep me coming back.
-
-**Reactive.** Marimo tracks which variables each cell defines and which it uses. Change a cell, and marimo reruns everything that depends on it — and only that. No more running cells out of order and getting confused about why the result changed. The notebook is always in a consistent state.
-
-**Reproducible.** Marimo saves notebooks as plain `.py` files. There's no hidden kernel state. If a notebook runs top-to-bottom without error, it's reproducible. I can `git diff` it, review it, and run it on a server with `marimo run notebook.py`.
-
-**AI-friendly.** This is underrated. Because marimo is just Python and the reactive graph is explicit, an AI agent can read the notebook, understand what each cell does, add a new cell that uses an existing variable, and the notebook just works. No hidden state to untangle. I work with AI assistants on notebooks constantly now, and marimo makes that surprisingly smooth.
+1. Reproducibility - Jupyter notebook does not ensure reproducibility. Cells are, by default, executed sequentially from the top to the bottom (run-all-cell). But users can run specific cells in any order. This harms the reproducibility. 
+2. Git & AI friendly - Jupyter notebook is essentially a mix of text and binary packed into a json file. Not editable and not git friendly. Marimo is just a python script without binary. An AI agent can read the notebook, understand what each cell does, add a new cell that uses an existing variable, and the notebook just works. It does not overload git.
 
 ## What is a walkthrough notebook
 
-A walkthrough is a notebook that tells a story. Not a scratchpad, not a dashboard — a linear narrative from question to finding, with figures and interpretation cells woven together. The reader scrolls top to bottom and follows the argument.
-
-I've found that the structure matters as much as the content. Which figures come first, how interpretations are worded, where caveats go — these shape how a reader understands the results. This skill captures the conventions I've settled on.
+A walkthrough is a notebook that presents the results with a narrative, i.e., it is a linear narrative from question to finding, with figures and interpretation cells woven together. I find it very helpful for communicating with my collaborators. I've found that the structure matters as much as the content. Which figures come first, how interpretations are worded, where caveats go. These shape how they the results. This skill captures the conventions I've settled on.
 
 ## Marimo-pair
 
-[marimo-pair](https://github.com/marimo-team/marimo) is a Claude Code skill that gives the AI full access to the running notebook kernel. It can read cell code, create and edit cells, run them, and see outputs — all while the notebook is live in the browser.
+[[marimo-pair](https://github.com/marimo-team/marimo)](https://github.com/marimo-team/marimo-pair) is a AI skill that gives the AI full access to the running notebook kernel. It can read cell code, create and edit cells, run them, and see outputs.
 
-The key API is `marimo._code_mode`:
-
-```python
-import marimo._code_mode as cm
-
-async with cm.get_context() as ctx:
-    cid = ctx.create_cell("fig_quad", hide_code=True)
-    ctx.run_cell(cid)
-```
-
-Without marimo-pair, editing a running notebook from the outside is fragile — direct file writes are silently clobbered when the kernel saves. Marimo-pair is the right way to let an AI work inside a live session.
-
-**This skill (marimo-walkthrough) handles story and style decisions. Marimo-pair handles the actual cell operations.** Load both when building or editing a walkthrough.
+**This skill (marimo-walkthrough) handles story and style decisions. Marimo-pair handles the actual cell operations.** Install marimo pair skill as well when using this walkthrough skill. 
 
 ## Installation
 
@@ -69,15 +48,13 @@ skills/marimo-walkthrough/
 └── custom.css    # Fira Code font, 20px body, warm brown + orange accent
 ```
 
-`SKILL.md` is what Claude Code loads as the skill prompt. It's intentionally short — around 90 lines — because it's used alongside marimo-pair and doesn't need to repeat what that skill already covers.
+`SKILL.md` is what AI loads as the skill prompt. I keep it intentionally short for maintainability and readability.
 
 ## My conventions
 
-The notebooks I make follow a 5-act story arc: setup → framework → main result → secondary result → continuous/closing view. Each act opens with a heading and closes with an interpretation cell that states the finding in plain language.
+The notebooks I make follow a 5-act story arc: setup, framework, main result, secondary result, continuous/closing view. Each act opens with a heading and closes with an interpretation cell that states the finding in plain language.
 
-Figures are split across two cells. A one-line display cell (`fig_quad`) sits near the story narrative at the top. The compute cell — data wrangling, figure construction — goes at the bottom, hidden, grouped with other compute cells for that section. Marimo's reactive graph makes this possible: define a variable anywhere and use it anywhere. Readers never see the code; they see outputs.
-
-All intermediate variables in compute cells are prefixed `_` so they don't pollute the reactive namespace and don't trigger spurious reruns.
+Figures are split across two cells. A one-line display cell (`fig_quad`) sits near the story narrative at the top. The compute cell---data wrangling, figure construction---goes at the bottom, hidden, grouped with other compute cells for that section. Readers never see the code. This is intentional because we care about results more than code at exploration stage. Later on, thorough reviews on code are needed when the analysis pipeline is formed. 
 
 For any stat that involves a non-obvious transformation (softmax, co-occurrence, embedding similarity), I add a worked example using a real row from the data before the figure. Numbers that came from nowhere are the most common source of confusion when sharing notebooks.
 
