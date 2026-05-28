@@ -38,21 +38,6 @@ h1 { font-size: 1.5em  !important; }
 h2 { font-size: 1.3em  !important; }
 h3 { font-size: 1.15em !important; }
 
-/* ── Tables ─────────────────────────────────────────────────────────────── */
-table {
-  border-collapse: collapse;
-  margin: 1em 0;
-}
-th, td {
-  border: 1px solid #d0c8c0;
-  padding: 6px 12px;
-  text-align: left;
-}
-th {
-  background-color: #f5f0eb;
-  font-weight: 600;
-}
-
 /* ── Callout / admonition boxes (marimo /// note syntax) ─────────────────── */
 .admonition, .note, [class*="admonition"] {
   border-left: 4px solid var(--accent);

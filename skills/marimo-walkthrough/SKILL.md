@@ -68,7 +68,7 @@ Use this to separate *what readers see* from *how it's computed*:
 - Bold the key finding in the first sentence: `**Choose** is the plurality…`
 - State N with italics: `(*N* = 8,858)`
 - Use `>` blockquote for the one-sentence summary in the closing act
-- Tables for framework comparisons (not prose lists)
+- Framework comparisons: use a `mo.vstack` of styled `mo.md` bullet blocks, not markdown tables
 - Callout boxes via `/// note | Title\n…\n///` for caveats or methodology asides
 
 ## Visualization Rules
@@ -135,12 +135,11 @@ Pattern: `mo.md` cell before the figure with a `/// note | How this is computed`
 /// note | How this is computed
 We pick one paper and walk through the steps:
 
-| Step | Value |
-|---|---|
-| Paper | *"Collaborative agents for code review"* |
-| Raw similarities | generate=0.41, choose=0.68, negotiate=0.12, execute=0.31 |
-| After softmax (τ=0.05) | generate=0.02, choose=0.96, negotiate=0.00, execute=0.02 |
-| Assigned label | **choose** |
+**Paper:** *"Collaborative agents for code review"*
+
+- Raw similarities → generate=0.41, choose=0.68, negotiate=0.12, execute=0.31
+- After softmax (τ=0.05) → generate=0.02, **choose=0.96**, negotiate=0.00, execute=0.02
+- Assigned label: **choose**
 
 Each paper's reasoning text is embedded; cosine similarity to four anchor descriptions
 gives the raw scores; softmax sharpens them into a probability profile.
@@ -164,5 +163,5 @@ Rules:
 - [ ] Each figure display cell immediately followed by interpretation `mo.md`
 - [ ] Numbers in md cells match actual data (run cells, verify)
 - [ ] N values formatted with commas: `f"{n:,}"`
-- [ ] Summary table in Act 5 with all key proportions
+- [ ] Summary in Act 5 lists key proportions as bold bullet points (no table)
 - [ ] Complex transforms have a worked example note before the figure
