@@ -2,6 +2,9 @@
 
 Claude Code skill for writing marimo walkthrough notebooks: story structure, visualization preferences, CSS.
 
+**Depends on:** [`marimo-pair`](https://github.com/marimo-team/marimo) skill for live kernel editing.
+Load both skills; `marimo-pair` handles cell mutations, this skill handles story/style decisions.
+
 ## Install
 
 ```bash

@@ -5,6 +5,9 @@ description: Build marimo walkthrough notebooks with narrative story arcs, consi
 
 # Marimo Walkthrough Skill
 
+**Requires:** load the `marimo-pair` skill to edit the live notebook kernel.
+Use `marimo-pair` for all cell creation/editing; use this skill for story, style, and content decisions.
+
 Copy `style.py` into the notebook directory. Load CSS via `custom.css`.
 
 ## Story Structure
@@ -23,8 +26,8 @@ Act 5 – Continuous  : embedding/continuous view → probability profiles → c
 
 ## Cell Conventions
 
-- `mo.md` narrative cells: `hide_code=True` (default in `create_cell`)
-- Code cells with figures: also `hide_code=True`
+- **All cells are hidden by default** — `hide_code=True` on every cell (narrative and figure alike)
+- Readers see only output; code is accessible via expand but never shown upfront
 - `mo.md` cells open each act with `##` heading, sub-sections with `###`
 - Interpretation cells immediately follow their figure — never separate them
 - No orphaned section headers (a `##` cell must be followed by content, not another `##`)
@@ -91,12 +94,42 @@ for col in df.columns:
         df[col] = df[col].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
 ```
 
+## Explaining Complex Transformations
+
+When a stat involves non-obvious computation (softmax, co-occurrence pairs, embedding distances, multi-label expansion), show a worked example inline using a real row from the data.
+
+Pattern: `mo.md` cell before the figure with a `/// note | How this is computed` callout:
+
+```
+/// note | How this is computed
+We pick one paper and walk through the steps:
+
+| Step | Value |
+|---|---|
+| Paper | *"Collaborative agents for code review"* |
+| Raw similarities | generate=0.41, choose=0.68, negotiate=0.12, execute=0.31 |
+| After softmax (τ=0.05) | generate=0.02, choose=0.96, negotiate=0.00, execute=0.02 |
+| Assigned label | **choose** |
+
+Each paper's reasoning text is embedded; cosine similarity to four anchor descriptions
+gives the raw scores; softmax sharpens them into a probability profile.
+///
+```
+
+Rules:
+- Use an actual row (pull from the dataframe, don't invent numbers)
+- Show every intermediate step in a table — input → transform → output
+- One example is enough; don't generalize abstractly before showing the concrete case
+- Place the note *before* the figure it explains, not after
+
 ## Checklist
 
-- [ ] CSS cell is first, hide_code=True
+- [ ] All cells have `hide_code=True`
+- [ ] CSS cell is first
 - [ ] Imports + constants cell (style.py helpers) near top
 - [ ] Data load cell before first figure
 - [ ] Each figure immediately followed by interpretation `mo.md`
 - [ ] Numbers in md cells match actual data (run cells, verify)
 - [ ] N values formatted with commas: `f"{n:,}"`
 - [ ] Summary table in Act 5 with all key proportions
+- [ ] Complex transforms have a worked example note before the figure
