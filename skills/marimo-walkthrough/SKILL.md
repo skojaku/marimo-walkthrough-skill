@@ -32,6 +32,37 @@ Act 5 – Continuous  : embedding/continuous view → probability profiles → c
 - Interpretation cells immediately follow their figure — never separate them
 - No orphaned section headers (a `##` cell must be followed by content, not another `##`)
 
+### Layout: top = story, bottom = compute
+
+Marimo's reactive graph lets variables defined anywhere be used anywhere.
+Use this to separate *what readers see* from *how it's computed*:
+
+```
+[TOP — visible story]
+  mo.md intro
+  fig_quad          ← one-liner: just "fig_quad" or mo.Html(fig_quad)
+  mo.md interpretation
+  fig_types
+  mo.md interpretation
+  ...
+
+[BOTTOM — hidden compute, grouped by section]
+  # === Act 3: McGrath ===
+  _quad_counts = ...   # data wrangling for fig_quad
+  fig_quad = go.Figure(...)
+
+  # === Act 4: Steiner ===
+  _struct_counts = ...
+  fig_binary = make_subplots(...)
+```
+
+**Rules:**
+- Every figure has exactly two cells: a **display cell** (top, one line) and a **compute cell** (bottom, all the wrangling + figure construction)
+- Display cell: just the variable name, or `mo.vstack([fig, caption])` — nothing else
+- Compute cell: all `_private` intermediate variables prefixed with `_` so they don't pollute the reactive graph
+- Group compute cells by section with a `# === Section Name ===` comment header
+- Data loads and shared constants (PALETTE, LAYOUT_DEFAULTS) stay near the top since everything depends on them
+
 ## Markdown Style
 
 - Bold the key finding in the first sentence: `**Choose** is the plurality…`
@@ -128,7 +159,9 @@ Rules:
 - [ ] CSS cell is first
 - [ ] Imports + constants cell (style.py helpers) near top
 - [ ] Data load cell before first figure
-- [ ] Each figure immediately followed by interpretation `mo.md`
+- [ ] Each figure split: one-line display cell (top) + compute cell (bottom)
+- [ ] Compute cells use `_private` variable names, grouped by `# === Section ===`
+- [ ] Each figure display cell immediately followed by interpretation `mo.md`
 - [ ] Numbers in md cells match actual data (run cells, verify)
 - [ ] N values formatted with commas: `f"{n:,}"`
 - [ ] Summary table in Act 5 with all key proportions
