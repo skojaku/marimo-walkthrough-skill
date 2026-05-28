@@ -53,6 +53,7 @@ callout with a **real example row** — pull from the actual dataframe, never in
 
 `style.py` provides `PALETTE`, `LAYOUT_DEFAULTS`, `apply_layout`. Always `fig.update_layout(**LAYOUT_DEFAULTS)`.
 
+- **Mean is half-story** — always show spread alongside central tendency: error bars (±1 SD or 95% CI), strip plots, violin, or a distribution panel. A single point with no spread is incomplete.
 - **No bar charts** — point plots for distributions
 - **No green+red together**
 - White background, no grid, axis lines only
@@ -86,5 +87,6 @@ for col in df.columns:
 - [ ] Compute cells grouped by `# === Section ===`
 - [ ] Interpretation `mo.md` immediately after each figure
 - [ ] Complex transforms: worked-example note before figure
+- [ ] Every mean/proportion accompanied by spread (SD, CI, or distribution)
 - [ ] Numbers verified against data; N formatted `f"{n:,}"`
 - [ ] Act 5 summary as bold bullet list
