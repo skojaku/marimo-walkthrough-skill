@@ -39,11 +39,19 @@ h2 { font-size: 1.3em  !important; }
 h3 { font-size: 1.15em !important; }
 
 /* ── Callout / admonition boxes (marimo /// note syntax) ─────────────────── */
-.admonition, .note, [class*="admonition"] {
+/* Only the outer box gets the accent border. marimo renders the callout as
+   <div class="admonition note"> with an inner <p class="admonition-title">;
+   a [class*="admonition"] match would border the title too → a second line. */
+.admonition {
+  border: none;                              /* clear marimo's default borders */
   border-left: 4px solid var(--accent);
   background: #fdf6ef;
   padding: 0.75em 1em;
   margin: 1em 0;
   border-radius: 0 4px 4px 0;
+}
+/* never let the inner title draw its own border */
+.admonition-title {
+  border: none;
 }
 </style>
