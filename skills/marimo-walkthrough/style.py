@@ -62,15 +62,17 @@ def apply_layout(fig, **overrides):
     return fig
 
 
-def band(fig, x, y, se, color="#2c7fb8", opacity=0.18, row=None, col=None):
-    """Add a +/-1 SE shaded band around a line (uncertainty is mandatory — see SKILL.md).
+def band(fig, x, y, half, color="#2c7fb8", opacity=0.18, row=None, col=None):
+    """Add a shaded uncertainty band around a line (uncertainty is mandatory — see SKILL.md).
 
-    x, y, se are 1-D arrays of equal length. Draws a filled polygon y +/- se.
-    Pair this with the line trace itself. Add the band BEFORE the line so the
-    line sits on top. For subplots pass row/col.
+    x, y, half are 1-D arrays of equal length; `half` is the half-width of the
+    interval at each x. Prefer a bootstrap CI half-width (e.g. (hi - lo) / 2 from
+    percentile bounds) over an analytic SE. Draws a filled polygon y +/- half.
+    Pair this with the line trace; add the band BEFORE the line so the line sits
+    on top. For subplots pass row/col.
     """
     import plotly.graph_objects as go
-    x = np.asarray(x, float); y = np.asarray(y, float); se = np.asarray(se, float)
+    x = np.asarray(x, float); y = np.asarray(y, float); se = np.asarray(half, float)
     r, g, b = int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
     fill = f"rgba({r},{g},{b},{opacity})"
     tr = go.Scatter(

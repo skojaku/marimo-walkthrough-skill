@@ -31,11 +31,19 @@ Display cells live near their narrative; all wrangling + figure construction goe
   when the last line is an expression; `fig.update_xaxes(...)` returns the figure and *will*
   render. Verify: a compute cell's `output` should be `None`, only the display cell holds the `Figure`.
 
-## Brevity first
+## Compression: the reader has an attention budget
 
-Less text beats more. Reviewers skim; every extra sentence is a tax. After a first draft,
-delete ~30%.
+Treat the reader's attention as a fixed budget. Every cell, figure, equation, and sentence spends
+some of it; spend it only where it buys understanding. A walkthrough is read once, skimmed, by a
+busy colleague — the goal is the most understanding per unit attention, not the most complete
+record. When in doubt, cut. After a first draft, delete ~30%.
 
+Before adding anything, ask: *does this earn its place in the attention budget?* If two cells make
+the same point, merge them. If a figure needs three paragraphs to explain, the figure is wrong.
+
+- **Consolidate near-duplicates.** If several items differ in only one thing (conditions, models,
+  fields), present them together — one figure, one table, one shared form — instead of repeating
+  the whole structure for each. Repetition spends attention without adding understanding.
 - **One interpretation per figure**, ideally a short bold-led sentence plus a bullet list of
   the numbers. No second paragraph restating it.
 - **No rhetorical flourishes.** Banned: "the signature", "the punchline", "in disguise", "a
@@ -74,15 +82,21 @@ claim against the actual values *with their uncertainty* before writing it.
 
 A point or line with no uncertainty is an incomplete result. **Every figure shows uncertainty.**
 
-- **Means/points → error bars; lines → a ±1 SE shaded band** (use `band()` from `style.py`).
-  Dumbbells and point plots get `error_x`/`error_y`.
-- **Spread ≠ uncertainty of the mean.** SD/IQR say how variable individual cases are; SE/CI say
-  how well the *mean* is pinned down. If the claim is about a mean ("significantly negative"),
-  show **SE or CI, not SD**. **Always label which the bars are** (e.g. "±1 SE across degree bins").
-- **Simulated / synthetic results need real uncertainty too.** Run the model over several seeds
-  and show **seed-to-seed SE** — do not report a single run, and do not fake a tiny analytic SE
-  (1/√n is meaningless when the variation that matters is between runs). Average within each
-  replicate first, then SE across replicates.
+- **Prefer a bootstrapped confidence interval over an analytic SE.** Resample the underlying units
+  (papers, replicates) with replacement, recompute the statistic each time (1000+ resamples), and
+  show the 2.5–97.5% percentile interval. This is the default because the statistics here —
+  Spearman/partial correlations, count-weighted within-bin means, ratios — have no clean closed-form
+  SE, and bootstrap makes no normality assumption. Reach for an analytic SE only when bootstrap is
+  genuinely infeasible.
+- **Means/points → error bars at the CI; lines → a shaded CI band** (use `band()` from `style.py`,
+  passing the half-CI). Dumbbells and point plots get `error_x`/`error_y` set to the CI.
+- **Spread ≠ uncertainty of the estimate.** SD/IQR say how variable individual cases are; a CI says
+  how well the *estimate* is pinned down. If the claim is about an estimate ("significantly
+  negative"), show the **CI, not SD**. **Always label what the interval is** (e.g. "95% bootstrap CI
+  over papers", or "±1 SE across degree bins" if you fall back to SE).
+- **Simulated / synthetic results need real uncertainty too.** Run the model over several seeds and
+  bootstrap / take the interval across seeds — do not report a single run, and do not fake a tiny
+  analytic SE (1/√n is meaningless when the variation that matters is between runs).
 - A figure where uncertainty would change the conclusion (an estimate that may overlap zero) must
   make that visible — that is the whole point.
 
@@ -98,18 +112,6 @@ after the equation.
   source code so it is correct.
 - **Define each symbol once, at its point of use.** Do not introduce notation the shown equation
   does not use, and do not define the same symbol twice (once in prose, again in a glossary).
-- **Unify a family of models into one parametrized equation.** When you have several related
-  variants (PA / fitness / aging / …), do not stack four separate equations. Write **one** weight
-  with on/off switches and a small table of which switch each variant flips:
-
-  ```
-  $$ w_{ij} = (c_j+1)^{s_{pa}}\, \eta_j^{s_{fit}}\, f(a_j;\mu_j)^{s_{age}}\, S(\mu_i,\mu_j)^{s_{assort}} $$
-
-  | model            | PA | fitness | aging | assort. |
-  |:--               |:--:|:--:     |:--:   |:--:     |
-  | PA (null)        | on | –       | –     | –       |
-  | aging assortative| on | –       | on    | on      |
-  ```
 
 ## Define Every Figure Element
 
@@ -201,18 +203,18 @@ for col in df.columns:
 - [ ] Compute cells render nothing (last line is an assignment; figure shows only in its display cell)
 - [ ] CSS cell first; data load + constants before first figure
 - [ ] Each figure: one-line display cell (top) + compute cell (bottom, `_` prefixed)
-- [ ] **Every figure shows uncertainty** (error bars / ±SE band); bars labeled SE/CI vs SD
-- [ ] Simulated results use real seed-to-seed SE (multiple runs), not a single run or analytic 1/√n
+- [ ] **Every figure shows uncertainty** (bootstrap CI preferred over SE); interval labeled (what it is over)
+- [ ] Simulated results use real across-seed uncertainty (multiple runs), not a single run or analytic 1/√n
 - [ ] Every claim matches the numbers *with* uncertainty; borderline/null cases stated honestly
 - [ ] Sign-flip vs collapse-to-zero named correctly; no over-generalization past the data
-- [ ] Brevity pass done (~30% cut); no banned flourishes; conclusion stated once
+- [ ] Compression pass done (~30% cut); near-duplicates consolidated; no banned flourishes; conclusion stated once
 - [ ] Numbers verified against data; N formatted `f"{n:,}"`
 - [ ] Closing summary as a bold bullet list with numbers
 - [ ] Plain English; no em-dashes; Greek spelled out in prose
 - [ ] Every quantity named precisely (statistic + what it is over + units); no vague "number/value"
 - [ ] Mechanism explained (the why), not just the result
 - [ ] Every figure element (series, axis, abbreviation, condition) defined when first introduced
-- [ ] Model family unified into one parametrized equation + switch table; symbols defined once, at use
+- [ ] Symbols defined once, at point of use; no unused notation
 - [ ] Models/methods shown as equations (`$$` on its own line, blank line around it)
 - [ ] Text grey/near-black, not brown; accent orange used sparingly
 - [ ] Obvious points cut; concept schematic kept minimal
