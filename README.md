@@ -45,7 +45,7 @@ cp skills/marimo-walkthrough/custom.css notebooks/my-notebook/
 skills/marimo-walkthrough/
 ├── SKILL.md      # Story arc, layout, markdown style, visualization rules, checklist
 ├── style.py      # PALETTE, LAYOUT_DEFAULTS, apply_layout(), softmax_profile()
-└── custom.css    # Fira Code font, 20px body, warm brown + orange accent
+└── custom.css    # Fira Code font, 20px body, grey ink + muted orange accent
 ```
 
 `SKILL.md` is what AI loads as the skill prompt. I keep it intentionally short for maintainability and readability.

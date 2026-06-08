@@ -5,8 +5,9 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #45372b;   /* warm dark brown */
-  --accent:     #df7020;   /* burnt orange — links, highlights */
+  --foreground: #222222;   /* near-black grey for body text (NOT brown) */
+  --muted:      #555555;   /* secondary text, captions */
+  --accent:     #c75d12;   /* muted burnt orange — links + sparing highlights only */
   --marimo-text-font:      "Fira Code", "JetBrains Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
   --marimo-heading-font:   "Fira Code", "JetBrains Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
   --marimo-monospace-font: "Fira Code", "JetBrains Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
@@ -45,7 +46,7 @@ h3 { font-size: 1.15em !important; }
 .admonition {
   border: none;                              /* clear marimo's default borders */
   border-left: 4px solid var(--accent);
-  background: #fdf6ef;
+  background: #f6f6f6;                        /* neutral grey, not warm cream */
   padding: 0.75em 1em;
   margin: 1em 0;
   border-radius: 0 4px 4px 0;
